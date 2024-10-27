@@ -1,1 +1,2 @@
 /selinemooddiary/.env
+*.sqlite3
