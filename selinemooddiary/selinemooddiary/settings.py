@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'emotionjournal',
     'projectinfo',
     'psylibrary',
-    'frontend_common'
+    'frontend_common',
+    'usersystem'
 ]
 
 MIDDLEWARE = [
@@ -113,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
