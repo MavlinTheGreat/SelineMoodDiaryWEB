@@ -1,0 +1,2 @@
+from .usermodel import DiaryUser
+
