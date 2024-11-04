@@ -5,10 +5,10 @@
     <title>Логин</title>
 </head>
 <body>
-    <form action="/login">
-        <input type="email" placeholder="Электронная почта" />
-        <input type="password" placeholder="Пароль" />
-        <button type="submit">Логин</button>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ loginform.as_p }}
+        <button type="submit">Отправить</button>
     </form>
 </body>
 </html>
