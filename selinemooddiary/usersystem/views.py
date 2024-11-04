@@ -8,7 +8,7 @@ class LoginView(TemplateView):
 
     def get(self, request):
         if request.session.get("user", None) is None:
-            return HttpResponse("login_page")
+            return render(request, "usersystem/login.html")
         return redirect("/about")
 
     def post(self, request):
@@ -18,7 +18,7 @@ class RegistrationView(TemplateView):
 
     def get(self, request):
         if request.session.get("user", None) is None:
-            return HttpResponse("registration_page")
+            return render(request, "authentification.html")
         return redirect("/about")
 
     def post(self, request):
