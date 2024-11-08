@@ -1,3 +1,4 @@
 from django.db import models
-
-# Create your models here.
+from .emotions import Emotion
+from .notetags import NoteTag
+from .emotionnotes import EmotionNote

@@ -1,14 +1,18 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from selinemooddiary.usersystem.usermodel import DiaryUser
+from usersystem.usermodel import DiaryUser
 
 
 class Emotion(models.Model):
-    name = models.CharField() # название эмоции
-    description = models.TextField() # её описание, синонимы и т.д.
+    name = models.CharField(max_length=64) # название эмоции
+    description = models.TextField(null=True) # её описание, синонимы и т.д.
     rating = models.PositiveSmallIntegerField( # численная оценка настроения, стоящая за иконкой
         validators=[MinValueValidator(1), MaxValueValidator(10)]) # ограничивает значения от 1 до 10
-    imageIcon = models.FileField()
-    owner = models.ForeignKey(DiaryUser, on_delete=models.CASCADE, default=None)
+    imageIcon = models.FileField(null=True)
+    owner = models.ForeignKey(DiaryUser, on_delete=models.CASCADE, default=None, null=True)# кому принадлежит эмоция
+    # None -> доступно всем
+
+    def __str__(self):
+        return self.name
 
