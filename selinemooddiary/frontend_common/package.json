@@ -1,0 +1,24 @@
+{
+  "name": "frontend_common",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --config webpack.config.js --mode development --output-path ./static/frontend_common/",
+    "build": "webpack --config webpack.config.js --mode production --output-path ./static/frontend_common/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
+    "babel-loader": "^9.2.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4"
+  }
+  
+}
