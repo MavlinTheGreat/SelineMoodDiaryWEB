@@ -36,8 +36,6 @@ class DiaryUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['nickname']
-
 
     objects = DiaryUserManager()
 
