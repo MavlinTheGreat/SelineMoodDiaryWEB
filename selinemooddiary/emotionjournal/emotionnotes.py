@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from rest_framework.exceptions import ValidationError
 
 from .emotions import Emotion
 from .notetags import NoteTag
@@ -12,3 +13,17 @@ class EmotionNote(models.Model):
     content = models.TextField(null=True) # содержимое заметки
     user = models.ForeignKey(DiaryUser, on_delete=models.CASCADE) # автор
     tags = models.ManyToManyField(NoteTag, related_name="notes")
+
+    def clean(self):
+        """
+        Проверяем, что Emotion принадлежит либо всем (owner=None), либо текущему пользователю.
+        """
+        if self.emotion and self.emotion.owner not in {None, self.user}:
+            raise ValidationError("Эмоция может быть либо глобальной, либо принадлежать текущему пользователю.")
+
+    def save(self, *args, **kwargs):
+        """
+        Вызываем метод clean перед сохранением.
+        """
+        self.clean()
+        super().save(*args, **kwargs)
