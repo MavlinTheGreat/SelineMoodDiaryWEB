@@ -1,0 +1,64 @@
+.main-menu {
+    font-size: 18px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    width: 15rem;
+    height: calc(100vh - 4rem - 2px);
+    border: 1px solid #D9D9D9;
+    border-radius: 1rem;
+    padding: 0 1rem;
+}
+
+.main-menu h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.main-menu .separator {
+    height: 1rem;
+    border-top: 1px solid #D9D9D9;
+}
+
+.main-menu .section-button {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: transparent;
+}
+
+.main-menu .section-button:active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.main-menu .section-button h2 {
+    text-align: left;
+    font-size: 1.3em;
+}
+
+.main-menu .section-button img {
+    height: 3em;
+    margin-right: 1rem;
+}
+
+.main-menu .bottom-menu-block {
+    display: flex;
+    margin-top: auto;
+    margin-bottom: 2rem;
+}
+
+.main-menu .bottom-menu-block button {
+    display: block;
+    height: 3rem;
+    border: 0;
+    padding: 0;
+    margin: auto;
+    background-color: transparent;
+}
+
+.main-menu .bottom-menu-block img {
+    height: 3rem;
+}
