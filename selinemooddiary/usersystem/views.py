@@ -87,10 +87,10 @@ class RegisterView(generics.CreateAPIView):
         return super().create(request, *args, **kwargs)
 
 # Как будто бы в итоге не использовалась?
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# def getUser(request):
-#     print("aboba")
-#     if request.method == "GET":
-#         return Response({'response': request.user}, status=status.HTTP_200_OK)
-#     return Response({'response': None}, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getUser(request):
+     print("aboba")
+     if request.method == "GET":
+         return Response({'response': request.user}, status=status.HTTP_200_OK)
+     return Response({'response': None}, status=status.HTTP_400_BAD_REQUEST)

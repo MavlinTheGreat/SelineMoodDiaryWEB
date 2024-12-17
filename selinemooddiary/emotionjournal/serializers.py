@@ -6,7 +6,7 @@ from .emotionnotes import EmotionNote
 class EmotionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Emotion
-        fields = ['id', 'name', 'description', 'rating', 'imageIcon', 'owner', 'is_global']
+        fields = ['id', 'name', 'description', 'rating', 'imageIcon', 'owner']
 
 
 class EmotionNoteSerializer(serializers.ModelSerializer):
