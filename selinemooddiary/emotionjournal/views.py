@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from .emotions import Emotion
 from .emotionnotes import EmotionNote
 from .serializers import EmotionSerializer, EmotionNoteSerializer
+from django.db.models import Q
 
 
 class EmotionNoteListCreateView(generics.ListCreateAPIView):
@@ -31,9 +32,10 @@ class EmotionListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = EmotionSerializer
 
+    # список доступных эмоций
     def get_queryset(self):
         # Показываем только глобальные эмоции или эмоции текущего пользователя
-        return Emotion.objects.filter(owner__in=[None, self.request.user])
+        return Emotion.objects.filter(Q(owner=None) | Q(owner=self.request.user))
 
     def perform_create(self, serializer):
         # Автоматически устанавливаем текущего пользователя как владельца эмоции
