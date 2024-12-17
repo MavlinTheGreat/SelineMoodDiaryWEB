@@ -19,7 +19,8 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', auth_views.RegisterView.as_view()),
-    path('api/journal/emotions', journal_views.EmotionListCreateView.as_view())
+    path('api/journal/emotions', journal_views.EmotionListCreateView.as_view()),
+    path('api/journal/notes', journal_views.EmotionNoteListCreateView.as_view())
 ]
 
 if settings.DEBUG:  # Только для разработки
