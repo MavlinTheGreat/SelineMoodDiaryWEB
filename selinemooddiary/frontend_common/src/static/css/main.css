@@ -1,7 +1,7 @@
 .main-page {
     display: flex;
     align-items: center;
-    height: 100%;
+    height: calc(100% - 4rem);
     padding: 2rem;
 }
 
