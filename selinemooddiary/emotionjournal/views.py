@@ -4,7 +4,8 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from .emotions import Emotion
 from .emotionnotes import EmotionNote
-from .serializers import EmotionSerializer, EmotionNoteSerializer
+from .notetags import NoteTag
+from .serializers import EmotionSerializer, EmotionNoteSerializer, NotetagsSerializer
 from django.db.models import Q
 
 
@@ -52,4 +53,17 @@ class EmotionListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         # Автоматически устанавливаем текущего пользователя как владельца эмоции
+        serializer.save(owner=self.request.user)
+
+
+class NoteTagListCreateView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = NotetagsSerializer
+
+    def get_queryset(self):
+        # Показываем только глобальные теги или эмоции текущего пользователя
+        return NoteTag.objects.filter(Q(owner=None) | Q(owner=self.request.user))
+
+    def perform_create(self, serializer):
+        # Автоматически устанавливаем текущего пользователя как владельца тега
         serializer.save(owner=self.request.user)
