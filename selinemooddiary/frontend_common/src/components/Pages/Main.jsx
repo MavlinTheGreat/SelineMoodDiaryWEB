@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Menu from '../Blocks/Menu';
 import Calendar from '../Blocks/Calendar';
 import Statistics from '../Blocks/Statistics';
@@ -86,7 +86,7 @@ const componentsMap = {
 }
 
 function Main() {
-
+  
   const [activeSection, setActiveSection] = useState('');
 
   const changeSectionKey = (newSectionKey) => {

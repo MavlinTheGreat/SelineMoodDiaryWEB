@@ -1,56 +1,105 @@
 import React, { useState, useEffect } from 'react';
 import '../../static/css/calendar.css'
 
-const DateList = ({ makeNoteForDay }) => {
+const DateList = ({ createNote }) => {
+  
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [daysInMonth, setDaysInMonth] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const today = new Date();
 
-  useEffect(() => {
+  const daysInMonth = () => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const days = new Date(year, month + 1, 0).getDate();
+    return days;
+  };
 
-    const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-    const offsetDays = Array.from({ length: firstDay }, () => null);
-    setDaysInMonth([...offsetDays, ...daysArray]);
-  }, [currentDate]);
+  const firstDayOffset = () => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    return new Date(year, month, 1).getDay(); // смещение первого дня месяца
+  };
+
+  const handleDayClick = (day) => {
+    const date = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      day
+    );
+    setSelectedDate(date);
+    createNote(date);
+  };
 
   const goToPreviousMonth = () => {
-    setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1));
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
+    );
   };
 
   const goToNextMonth = () => {
-    setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1));
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
+    );
   };
 
-  const getMonthName = (monthIndex) => {
-    const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-    return monthNames[monthIndex];
+  const renderDays = () => {
+    const days = [];
+    const totalDays = daysInMonth();
+    const offset = firstDayOffset() === 0 ? 6 : firstDayOffset() - 1; // Пн как первый день недели
+
+    // Добавление пустых ячеек
+    for (let i = 0; i < offset; i++) {
+      days.push(<div key={`empty-${i}`} className="calendar-day empty"></div>);
+    }
+
+    // Добавление дней месяца
+    for (let day = 1; day <= totalDays; day++) {
+      const isToday =
+        day === today.getDate() &&
+        currentDate.getMonth() === today.getMonth() &&
+        currentDate.getFullYear() === today.getFullYear();
+
+      const isSelected =
+        selectedDate &&
+        day === selectedDate.getDate() &&
+        currentDate.getMonth() === selectedDate.getMonth() &&
+        currentDate.getFullYear() === selectedDate.getFullYear();
+
+      days.push(
+        <div
+          key={day}
+          className={`calendar-day ${isToday ? "today" : ""} ${
+            isSelected ? "selected" : ""
+          }`}
+          onClick={() => handleDayClick(day)}
+        >
+          {day}
+        </div>
+      );
+    }
+
+    return days;
   };
 
   return (
-    <div className="date-list">
-      <div className="date-list-header">
+    <div className="calendar">
+      <div className="calendar-header">
         <button onClick={goToPreviousMonth}>&lt;</button>
-        <h2>{getMonthName(currentDate.getMonth())} {currentDate.getFullYear()}</h2>
+        <span>
+          {currentDate.toLocaleString("default", {
+            month: "long",
+            year: "numeric",
+          })}
+        </span>
         <button onClick={goToNextMonth}>&gt;</button>
       </div>
-      
-      <div className="date-list-grid">
-        {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((day, index) => (
-          <div key={index} className="calendar-day-name">{day}</div>
-        ))}
-        
-        {daysInMonth.map((day, index) => (
-          <div
-            key={index}
-            className={`calendar-day ${day ? '' : 'empty'}`}
-            onClick={() => makeNoteForDay(year=currentDate.getFullYear, month=currentDate.getMonth, day=day)}
-          >
+      <div className="calendar-grid">
+        {["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"].map((day, index) => (
+          <div key={index} className="calendar-day-name">
             {day}
           </div>
         ))}
+        {renderDays()}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 //import DateList from './DateList';
 import '../../static/css/calendar.css'
-
+{/*
 const EmotionChoice = ({ chooseEmotion }) => {
   
   const emotionEmojiList = React.useContext(EmotionContext);
@@ -47,3 +47,4 @@ const EmotionChoice = ({ chooseEmotion }) => {
 };
 
 export default EmotionChoice;
+*/}
