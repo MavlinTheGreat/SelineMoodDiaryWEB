@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'emotionjournal',
-    'projectinfo',
     'psylibrary',
     'usersystem',
     'corsheaders',
