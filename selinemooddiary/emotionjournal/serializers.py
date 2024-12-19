@@ -30,7 +30,7 @@ class NotetagsSerializer(serializers.ModelSerializer):
 class EmotionNoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmotionNote
-        fields = ['id', 'date', 'emotion', 'content', 'user', 'tags']
+        fields = ['id', 'date', 'emotion', 'content', 'tags']
 
     def validate_owner(self, value):
         # Запрещаем изменение поля user
