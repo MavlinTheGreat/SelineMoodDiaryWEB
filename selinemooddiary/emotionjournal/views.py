@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions
 from rest_framework.filters import OrderingFilter
@@ -13,7 +15,7 @@ class EmotionNoteListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = EmotionNoteSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]  # Подключаем фильтрацию и сортировку
-    filterset_fields = ['emotion', 'date']  # Поля для фильтрации
+    filterset_fields = ['emotion']  # Поля для фильтрации
     ordering_fields = ['date']  # Поля для сортировки
     ordering = ['date']  # Сортировка по умолчанию: от старых к новым
 
@@ -22,10 +24,13 @@ class EmotionNoteListCreateView(generics.ListCreateAPIView):
         res = EmotionNote.objects.filter(user=self.request.user)
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
+        date = self.request.query_params.get('date')
         if start_date:
             res = res.filter(date__gte=start_date)
         if end_date:
             res = res.filter(date__lt=end_date)
+        if not start_date and not end_date:
+            res = res.filter(date__date=date)
         return res
 
     def perform_create(self, serializer):
