@@ -24,7 +24,8 @@ urlpatterns = [
     path('api/journal/tags', journal_views.NoteTagListCreateView.as_view()),
     path('api/journal/tags/<int:pk>', journal_views.NoteTagDetailView.as_view()),
     # статистика
-    path('api/stat/strike', stat_views.UserStrikeView.as_view())
+    path('api/stat/strike', stat_views.UserStrikeView.as_view()),
+    path('api/stat/moodchange', stat_views.MoodGraphView.as_view())
 ]
 
 if settings.DEBUG:  # Только для разработки
