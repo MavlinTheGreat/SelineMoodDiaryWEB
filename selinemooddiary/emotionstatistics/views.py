@@ -1,4 +1,5 @@
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
+import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -11,6 +12,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from emotionjournal.emotionnotes import EmotionNote
+
+matplotlib.use("Agg")
 
 # для отображения сколько дней подряд пользователь вносит заметки
 class UserStrikeView(APIView):
@@ -49,7 +52,7 @@ class UserStrikeView(APIView):
 
         return Response({'strike': strike})
 
-
+# график колебаний настроения
 class MoodGraphView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -57,18 +60,20 @@ class MoodGraphView(APIView):
         user = request.user  # текущий пользователь
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
+        #print(start_date, end_date)
 
         # Обработка дат
         try:
             if start_date:
                 start_date = pd.to_datetime(start_date).date()
-            else:
-                start_date = now().date() - timedelta(days=7)  # последняя неделя
 
             if end_date:
                 end_date = pd.to_datetime(end_date).date()
             else:
                 end_date = now().date()
+            if not start_date:
+                start_date = end_date - timedelta(days=7)
+
         except ValueError:
             raise ValidationError("Некорректный формат дат. Используйте формат YYYY-MM-DD.")
 
@@ -98,19 +103,19 @@ class MoodGraphView(APIView):
         daily_ratings = df.groupby("date")["rating"].mean().reset_index()
 
         # Построение графика
-        plt.figure(figsize=(10, 5))
-        sns.lineplot(data=daily_ratings, x="date", y="rating", marker="o")
-        plt.title("Колебания настроения")
-        plt.xlabel("Дата")
-        plt.ylabel("Средний рейтинг")
+        fig, ax = plt.subplots(figsize=(10, 5), num=f"mood_graph_{request.user.email}{datetime.now()}")
+        sns.lineplot(data=daily_ratings, x="date", y="rating", marker="o", ax=ax)
+        ax.set_title("Колебания настроения")
+        ax.set_xlabel("Дата")
+        ax.set_ylabel("Средний рейтинг")
         plt.xticks(rotation=45)
 
         # Сохранение графика в буфер
         buffer = io.BytesIO()
         plt.tight_layout()
-        plt.savefig(buffer, format="png")
+        fig.savefig(buffer, format="png")
         buffer.seek(0)
-        plt.close()
+        plt.close('all')
 
         # Возвращаем график как HTTP-ответ
         return HttpResponse(buffer, content_type="image/png")
