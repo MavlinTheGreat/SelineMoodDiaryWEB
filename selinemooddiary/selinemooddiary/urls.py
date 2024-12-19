@@ -3,6 +3,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from usersystem import views as auth_views
 from emotionjournal import views as journal_views
+from emotionstatistics import views as stat_views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from django.conf import settings
@@ -21,7 +22,9 @@ urlpatterns = [
     path('api/journal/notes', journal_views.EmotionNoteListCreateView.as_view()),
     path('api/journal/notes/<int:pk>', journal_views.EmotionNoteDetailView.as_view()),
     path('api/journal/tags', journal_views.NoteTagListCreateView.as_view()),
-    path('api/journal/tags/<int:pk>', journal_views.NoteTagDetailView.as_view())
+    path('api/journal/tags/<int:pk>', journal_views.NoteTagDetailView.as_view()),
+    # статистика
+    path('api/stat/strike', stat_views.UserStrikeView.as_view())
 ]
 
 if settings.DEBUG:  # Только для разработки

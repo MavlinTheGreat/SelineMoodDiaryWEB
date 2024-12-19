@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'psylibrary',
     'usersystem',
     'corsheaders',
+    'emotionstatistics',
 ]
 
 MIDDLEWARE = [
