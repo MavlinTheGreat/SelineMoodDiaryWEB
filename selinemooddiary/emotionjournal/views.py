@@ -38,6 +38,12 @@ class EmotionNoteDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EmotionNoteSerializer
     queryset = EmotionNote.objects.all()
 
+    def perform_update(self, serializer):
+        instance = self.get_object()
+        if instance.user != self.request.user:
+            raise PermissionDenied("Вы не можете редактировать эту запись.")
+        serializer.save()
+
     def perform_destroy(self, instance):
         if instance.user != self.request.user:
             raise PermissionDenied("Вы не можете удалить эту запись.")
@@ -58,10 +64,17 @@ class EmotionListCreateView(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
 
-class EmotionDetailView(generics.RetrieveDestroyAPIView):
+class EmotionDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = EmotionSerializer
     queryset = Emotion.objects.all()
+
+    def perform_update(self, serializer):
+        # Проверяем, что текущий пользователь является владельцем эмоции
+        instance = self.get_object()
+        if instance.owner is not None and instance.owner != self.request.user:
+            raise PermissionDenied("Вы не можете редактировать эту эмоцию.")
+        serializer.save()
 
     def perform_destroy(self, instance):
         # Проверяем, является ли текущий пользователь владельцем эмоции
@@ -83,10 +96,16 @@ class NoteTagListCreateView(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
 
-class NoteTagDetailView(generics.RetrieveDestroyAPIView):
+class NoteTagDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = NotetagsSerializer
     queryset = NoteTag.objects.all()
+
+    def perform_update(self, serializer):
+        instance = self.get_object()
+        if instance.owner is not None and instance.owner != self.request.user:
+            raise PermissionDenied("Вы не можете редактировать этот тег.")
+        serializer.save()
 
     def perform_destroy(self, instance):
         if instance.owner is not None and instance.owner != self.request.user:
