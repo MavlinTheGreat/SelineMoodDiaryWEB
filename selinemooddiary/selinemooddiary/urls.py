@@ -10,18 +10,18 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('about/', include('projectinfo.urls')),
-    # path('about/', TemplateView.as_view(template_name="index.html")),
-    # path('login/', auth_views.LoginView.as_view()),
-    # path('register/', auth_views.RegistrationView.as_view()),
-    # path('', TemplateView.as_view(template_name="index.html")),
+    # авторизация
     path('api/user/', auth_views.DiaryUserDetailAPIView.as_view(), name="user_detail"), # информация о пользователе ???
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', auth_views.RegisterView.as_view()),
+    # дневник эмоций
     path('api/journal/emotions', journal_views.EmotionListCreateView.as_view()),
+    path('api/journal/emotions/<int:pk>', journal_views.EmotionDetailView.as_view()),
     path('api/journal/notes', journal_views.EmotionNoteListCreateView.as_view()),
-    path('api/journal/tags', journal_views.NoteTagListCreateView.as_view())
+    path('api/journal/notes/<int:pk>', journal_views.EmotionNoteDetailView.as_view()),
+    path('api/journal/tags', journal_views.NoteTagListCreateView.as_view()),
+    path('api/journal/tags/<int:pk>', journal_views.NoteTagDetailView.as_view())
 ]
 
 if settings.DEBUG:  # Только для разработки

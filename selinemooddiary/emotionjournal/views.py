@@ -1,5 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from .emotions import Emotion
@@ -36,10 +36,12 @@ class EmotionNoteListCreateView(generics.ListCreateAPIView):
 class EmotionNoteDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = EmotionNoteSerializer
+    queryset = EmotionNote.objects.all()
 
-    def get_queryset(self):
-        # Возвращаем только заметки текущего пользователя
-        return EmotionNote.objects.filter(user=self.request.user)
+    def perform_destroy(self, instance):
+        if instance.user != self.request.user:
+            raise PermissionDenied("Вы не можете удалить эту запись.")
+        instance.delete()
 
 
 class EmotionListCreateView(generics.ListCreateAPIView):
@@ -56,6 +58,18 @@ class EmotionListCreateView(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
 
+class EmotionDetailView(generics.RetrieveDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = EmotionSerializer
+    queryset = Emotion.objects.all()
+
+    def perform_destroy(self, instance):
+        # Проверяем, является ли текущий пользователь владельцем эмоции
+        if instance.owner is not None and instance.owner != self.request.user:
+            raise PermissionDenied("Вы не можете удалить эту эмоцию.")
+        instance.delete()
+
+
 class NoteTagListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = NotetagsSerializer
@@ -67,3 +81,14 @@ class NoteTagListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         # Автоматически устанавливаем текущего пользователя как владельца тега
         serializer.save(owner=self.request.user)
+
+
+class NoteTagDetailView(generics.RetrieveDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = NotetagsSerializer
+    queryset = NoteTag.objects.all()
+
+    def perform_destroy(self, instance):
+        if instance.owner is not None and instance.owner != self.request.user:
+            raise PermissionDenied("Вы не можете удалить этот тег.")
+        instance.delete()
