@@ -1,0 +1,41 @@
+FROM python:3.12.5-slim as backend
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+
+WORKDIR /app
+
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+RUN echo "SECRET_KEY=$(openssl rand -base64 32)" > .env
+
+RUN python manage.py migrate
+
+
+FROM node:20 as frontend
+
+COPY frontend_common/package.json frontend_common/package-lock.json ./
+RUN npm install
+
+COPY frontend_common/ ./
+RUN npm run build
+
+
+FROM python:3.12.5-slim as final
+
+
+WORKDIR /app
+
+
+COPY --from=backend /app /app
+COPY --from=frontend /frontend /app/frontend_common
+
+
+EXPOSE 8000 3000
+
+CMD ["sh", "-c", "python manage.py runserver 0.0.0.0:8000 & cd frontend_common && npm start && tail -f /dev/null"]
