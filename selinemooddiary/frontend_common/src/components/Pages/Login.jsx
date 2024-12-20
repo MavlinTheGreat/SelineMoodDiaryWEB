@@ -15,40 +15,40 @@ function Login() {
         navigate('/');
     }
    
-    useEffect(() => {
+  useEffect(() => {
     document.body.style.backgroundImage = `url(${localBackgroundImage})`;
     return () => {
         document.body.style.backgroundImage = '';
     };
     }, []);
     
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState([]);
-    const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setErrors([]);
-        setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrors([]);
+    setLoading(true);
 
-        if (password && email) {
-            loginUser(email, password);
-        } else {
-            if (!email) {
-                setErrors([...errors, 'Почта не введена']);
-            }
-            if (!password) {
-                setErrors([...errors, 'Пароль не введён']);
-            }
-        }
+    if (password && email) {
+        loginUser(email, password);
+    } else {
+      if (!email) {
+        setErrors([...errors, 'Почта не введена']);
+      }
+      if (!password) {
+        setErrors([...errors, 'Пароль не введён']);
+      }
+    }
 
-        setLoading(false);
+    setLoading(false);
 
-        if (loginUser.user) {
-            navigate('/');
-        }
-    };
+    if (loginUser.user) {
+      navigate('/');
+    }
+  };
 
     return (
         <div className='auth-page'>

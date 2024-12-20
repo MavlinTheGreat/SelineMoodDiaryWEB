@@ -4,7 +4,7 @@ import '../../static/css/menu.css'
 import BlockImageLightTheme from '../../assets/images/menuImages/Light_theme.png';
 import BlockImageSettings from '../../assets/images/menuImages/Settings.png';
 
-function Menu({ sectionList, changeSectionKey }) {
+function Menu({ sectionList, changeSectionKey, setSettings }) {
   return (
     <div className='main-menu'>
         <h1>Меню</h1>
@@ -17,7 +17,7 @@ function Menu({ sectionList, changeSectionKey }) {
           <button>
             <img src={BlockImageLightTheme}/>
           </button>
-          <button>
+          <button onClick={() => setSettings(true)}>
             <img src={BlockImageSettings}/>
           </button>
         </div>

@@ -3,6 +3,7 @@ import Menu from '../Blocks/Menu';
 import Calendar from '../Blocks/Calendar';
 import Statistics from '../Blocks/Statistics';
 import MentalHealth from '../Blocks/MentalHealth';
+import Settings from '../Blocks/Settings';
 import Tasks from '../Blocks/Tasks';
 import '../../static/css/main.css'
 
@@ -48,6 +49,7 @@ const componentsMap = {
 function Main() {
   
   const [activeSection, setActiveSection] = useState('Calendar');
+  const [settings, setSettings] = useState(false);
 
   const changeSectionKey = (newSectionKey) => {
     setActiveSection(newSectionKey);
@@ -55,10 +57,11 @@ function Main() {
 
   return (
     <div className='main-page'>
-      <Menu sectionList={sectionList} changeSectionKey={changeSectionKey}/>
+      <Menu sectionList={sectionList} changeSectionKey={changeSectionKey} setSettings={setSettings}/>
       <div className='active-section'>
         {componentsMap[activeSection] || <div>Страница не найдена</div>}
       </div>
+      {settings && <Settings setSettings={setSettings}></Settings>}
     </div>
   );
 }

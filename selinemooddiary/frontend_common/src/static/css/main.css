@@ -3,9 +3,49 @@
     align-items: center;
     height: calc(100% - 4rem);
     padding: 2rem;
+    position: relative;
 }
 
 .active-section {
     margin-left: auto;
     margin-right: 8rem;
+}
+
+.settings-menu {
+    position: absolute;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 15rem;
+    border: 1px solid #D9D9D9;
+    border-radius: 1rem;
+    padding: 0 1rem;
+    padding-bottom: 0.5rem;
+}
+
+.settings-header {
+    position: relative;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.settings-header button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0;
+    background: none;
+    border: none;
+    border-radius: 1rem;
+}
+
+.logout-button {
+    background: none;
+    border: none;
+    border-radius: 1rem;
+    background-color: #1ac66a;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    color: white;
 }

@@ -21,10 +21,10 @@ function Register() {
   }
   
   useEffect(() => {
-  document.body.style.backgroundImage = `url(${localBackgroundImage})`;
-  return () => {
-      document.body.style.backgroundImage = '';
-  };
+    document.body.style.backgroundImage = `url(${localBackgroundImage})`;
+    return () => {
+        document.body.style.backgroundImage = '';
+    };
   }, []);
 
   const handleSubmit = async e => {
