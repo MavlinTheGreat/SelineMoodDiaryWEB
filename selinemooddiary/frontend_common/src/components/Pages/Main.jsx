@@ -11,13 +11,6 @@ import SectionImageStatistics from '../../assets/images/sectionImages/Statistics
 import SectionImageMentalHealth from '../../assets/images/sectionImages/Mental_health.png';
 import SectionImageTasks from '../../assets/images/sectionImages/Tasks.png';
 
-import EmotionEmojiCool from '../../assets/images/emotionEmojis/Emoji_cool.png';
-import EmotionEmojiFrown from '../../assets/images/emotionEmojis/Emoji_frown.png';
-import EmotionEmojiLove from '../../assets/images/emotionEmojis/Emoji_love.png';
-import EmotionEmojiNice from '../../assets/images/emotionEmojis/Emoji_nice.png';
-import EmotionEmojiSad from '../../assets/images/emotionEmojis/Emoji_sad.png';
-import EmotionEmojiSob from '../../assets/images/emotionEmojis/Emoji_sob.png';
-
 const sectionList = [
   {
     id: 'section_Calendar',
@@ -42,39 +35,6 @@ const sectionList = [
     key: 'Tasks',
     imagesrc: SectionImageTasks,
     name: 'Задачи',
-  },
-]
-
-const emotionEmojiList = [
-  {
-    key: 'emotion_Cool',
-    imagesrc: EmotionEmojiCool,
-    name: 'Круто',
-  },
-  {
-    key: 'emotion_Frowm',
-    imagesrc: EmotionEmojiFrown,
-    name: 'Плохо',
-  },
-  {
-    key: 'emotion_Love',
-    imagesrc: EmotionEmojiLove,
-    name: 'В любви',
-  },
-  {
-    key: 'emotion_Nice',
-    imagesrc: EmotionEmojiNice,
-    name: 'Хорошо',
-  },
-  {
-    key: 'emotion_Sad',
-    imagesrc: EmotionEmojiSad,
-    name: 'Грустно',
-  },
-  {
-    key: 'emotion_Sob',
-    imagesrc: EmotionEmojiSob,
-    name: 'Плачу',
   },
 ]
 

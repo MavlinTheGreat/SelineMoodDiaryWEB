@@ -3,6 +3,8 @@ import '../../static/css/calendar.css'
 import DateList from './DateList';
 import NoteRedactor from './NoteRedactor';
 
+import localBackgroundImage from '../../assets/images/1.jpeg';
+
 const Calendar = () => {
 
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -12,6 +14,13 @@ const Calendar = () => {
     setSelectedDate(date);
     setUsedPart("noteRedactor");
   }
+
+  useEffect(() => {
+    document.body.style.backgroundImage = `url(${localBackgroundImage})`;
+    return () => {
+      document.body.style.backgroundImage = '';
+    };
+  }, []);
 
   const componentsMap = {
     'dateList': <DateList createNote={createNote}></DateList>,

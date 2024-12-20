@@ -1,7 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext'
 import '../../static/css/auth.css'
+
+import localBackgroundImage from '../../assets/images/2.jpeg';
 
 function Login() {
     
@@ -12,6 +14,13 @@ function Login() {
     if (loginUser.user) {
         navigate('/');
     }
+   
+    useEffect(() => {
+    document.body.style.backgroundImage = `url(${localBackgroundImage})`;
+    return () => {
+        document.body.style.backgroundImage = '';
+    };
+    }, []);
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

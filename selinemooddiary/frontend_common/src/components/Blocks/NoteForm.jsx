@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import closeImg from '../../assets/images/close.png';
 import '../../static/css/calendar.css'
@@ -7,6 +7,7 @@ const NoteForm = ({ note, setNote, setActiveBlock, exitRedactor, postNote, remov
 
   const [loading, setLoading] = useState(true);
   const [emotions, setEmotions] = useState([]);
+  const textareaRef = useRef(null);
       
   if (note.emotion == 0) {
     setActiveBlock("emotionChoice");
@@ -28,6 +29,12 @@ const NoteForm = ({ note, setNote, setActiveBlock, exitRedactor, postNote, remov
 
     return () => window.removeEventListener('resize', updateBodyHeight);
   }, []);
+
+  useEffect(() => {
+    if (!loading && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [loading]);
 
   useEffect(() => {
     
@@ -86,12 +93,13 @@ const NoteForm = ({ note, setNote, setActiveBlock, exitRedactor, postNote, remov
         <button onClick={() => exitRedactor()}><img src={closeImg}/></button>
       </div>
       <form className='note-form' onSubmit={handleSubmit}>
-          <textarea
+          <div className='note-form-textarea'><label htmlFor='textarea'><textarea
             id="textarea"
+            ref={textareaRef}
             value={note.content}
             onChange={(e) => setNote({...note, content: e.target.value})}
-          />
-          <br/>
+          /></label>
+          </div>
           <div className='form-buttons'>
             <button type='button' onClick={() => removeNote(note)}>{'Удалить'}</button>
             <button type="submit">{'Сохранить'}</button>
