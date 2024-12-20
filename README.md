@@ -14,6 +14,7 @@
 ```git
 git clone https://github.com/MavlinTheGreat/SelineMoodDiaryWEB
 cd SelineMoodDiaryWEB
+cd selinemooddiary
 docker-compose down --volumes && docker-compose up --build
 ```
 Далее веб-интерфейс приложения должен быть доступен по адресу *localhost:3000*. По адресу *localhost:8000/api/* располагаются разнообразные API, используемые фронтендом.
