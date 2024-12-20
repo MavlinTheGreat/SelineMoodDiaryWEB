@@ -1,0 +1,48 @@
+# Step 1: Base image for Python (Django)
+FROM python:3.12.5-slim as backend
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set working directory for backend
+WORKDIR /app
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy Django project files
+COPY . .
+
+# Generate .env file during build
+RUN echo "SECRET_KEY=$(openssl rand -base64 32)"
+
+# Perform database migrations
+RUN python manage.py migrate
+
+# Step 2: Base image for Node.js (React)
+FROM node:20 as frontend
+
+WORKDIR /frontend_common  # Устанавливаем финальное имя папки
+COPY frontend_common/package.json frontend_common/package-lock.json ./
+RUN npm install
+
+COPY frontend_common/ ./
+RUN npm run build
+
+# Step 3: Final image to combine backend and frontend
+FROM python:3.12.5-slim as final
+
+# Set working directory
+WORKDIR /app
+
+# Copy backend and frontend from previous steps
+COPY --from=backend /app /app
+COPY --from=frontend /frontend /app/frontend_common
+
+# Expose ports for Django and React
+EXPOSE 8000 3000
+
+# Default command to start both servers using a shell script
+CMD ["sh", "-c", "python manage.py runserver 0.0.0.0:8000 & cd frontend_common && npm start && tail -f /dev/null"]
