@@ -1,3 +1,7 @@
+body {
+  background-image: url('../../assets/images/1.jpeg');
+}
+
 .calendar-section {
   margin: 0 auto;
 }
@@ -122,28 +126,32 @@
 }
 
 .note-form-container {
+  display: flex;
+  flex-direction: column;
   position: relative;
   background-color: white;
   border: 1px solid #d9d9d9;
   width: 30rem;
+  border-radius: 1rem;
 }
 
 .note-form-header {
   position: relative;
+  flex-shrink: 0;
   border-bottom: 1px solid #d9d9d9;
 }
 
 .note-form-header > :first-child {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: 2rem;
+  left: 3rem;
   font-size: 1.25rem;
 }
 
 .note-form-header > :last-child {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 2rem;
+  right: 3rem;
 }
 
 .note-form-header button {
@@ -172,14 +180,29 @@
 
 .emotion-partition > :first-child {
   margin-top: 4rem;
-} 
+}
+
+.note-form {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.note-form-textarea {
+  flex: 1;
+  margin-bottom: 3rem;
+  margin-top: 3rem;
+}
 
 .note-form textarea {
-  display: block;
-  width: calc(100% - 2rem);
-  height: 15rem;
-  margin: 1rem;
-  margin-bottom: 1rem;
+  flex-grow: 1;
+  display: flex;
+  width: calc(100% - 6rem);
+  height: 100%;
+  resize: none;
+  margin: 3rem;
+  margin-bottom: 3rem;
+  margin-top: 0;
   padding: 0;
   border: none;
   font-size: 1.25rem;
@@ -191,21 +214,21 @@
   border: none;
   border-radius: 0.5rem;
   padding: 0.5rem;
-  width: calc(50% - 1rem);
+  width: calc(50% - 4rem);
   background-color: #ff6c6c;
-  margin: auto;
+  margin: auto 1rem auto auto;
   font-size: 1.25rem;
 }
 
 .note-form button[type="submit"] {
-  background-color: #14ae5c;
-  width: calc(50% - 1rem);
+  background-color: #1ac66a;
+  margin: auto auto auto 1rem;
 }
 
 .form-buttons {
   display: flex;
-  margin-top: auto;
-  position: absolute;
-  bottom: 0;
+  flex-shrink: 0;
+  margin-bottom: 2rem;
+  bottom: 1rem;
   width: 100%;
 }

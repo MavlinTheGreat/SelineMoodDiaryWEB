@@ -47,11 +47,13 @@ const DateList = ({ createNote }) => {
       
       const fetchNotes = async () => {
         try {
+
+          const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 2, 0)
           
           const response = await axios.get('http://127.0.0.1:8000/api/journal/notes', {
             params: {
-              start_date: currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-1",
-              end_date: currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate().toString(), 
+              start_date: currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-01",
+              end_date: endDate.getFullYear().toString() + "-" + String(endDate.getMonth() + 1).padStart(2, '0') + "-01", 
             },
             headers: { Authorization: "Bearer " + parsedTokens.access },
           });
@@ -125,6 +127,7 @@ const DateList = ({ createNote }) => {
         currentDate.getFullYear() === selectedDate.getFullYear();
 
       let currentNote = {
+        emotion: 0
       };
 
       try {

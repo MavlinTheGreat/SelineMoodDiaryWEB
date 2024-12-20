@@ -1,7 +1,9 @@
-import {React, useContext, useState} from 'react';
-import { Link } from 'react-router-dom';
+import {React, useContext, useEffect, useState} from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
 import '../../static/css/auth.css'
+
+import localBackgroundImage from '../../assets/images/2.jpeg';
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -11,6 +13,19 @@ function Register() {
   const [password2, setPassword2] = useState("");
 
   const {registerUser} = useContext(AuthContext);
+  
+  const navigate = useNavigate();
+
+  if (registerUser.user) {
+      navigate('/');
+  }
+  
+  useEffect(() => {
+  document.body.style.backgroundImage = `url(${localBackgroundImage})`;
+  return () => {
+      document.body.style.backgroundImage = '';
+  };
+  }, []);
 
   const handleSubmit = async e => {
     e.preventDefault();
