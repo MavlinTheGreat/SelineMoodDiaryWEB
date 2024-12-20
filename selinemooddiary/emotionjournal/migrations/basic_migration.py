@@ -23,10 +23,10 @@ def add_initial_data(apps, schema_editor):
          4, 'STATIC/EMOTION_ICONS/razdrazhennost.png', 'ANG'),
         ('Злость', 'Вы в ярости, и негатив съедает вас изнутри.',
          3, 'STATIC/EMOTION_ICONS/zlost.png', 'ANG'),
-        ('Тревога', 'Негатив, страхи настоящего и будущего медленно съедают вас.',
-         2, 'media/STATIC/EMOTION_ICONS/Scared.webp', 'SAD'),
+        ('Тревога', 'Негатив, страхи настоящего и будущего медленно съедают вас изнутри.',
+         2, 'media/STATIC/EMOTION_ICONS/trevoga.png', 'SAD'),
         ('Грусть', 'Тоска, да и только.',
-         1, 'STATIC/EMOTION_ICONS/Face_sadness.webp', 'SAD'),
+         1, 'STATIC/EMOTION_ICONS/grust.png', 'SAD'),
     ]
 
     for name, description, rating, imagepath, group in emotions:
