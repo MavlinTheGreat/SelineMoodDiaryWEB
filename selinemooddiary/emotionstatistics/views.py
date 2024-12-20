@@ -22,7 +22,10 @@ from rest_framework.response import Response
 from emotionjournal.emotions import Emotion, GROUP_ICONS
 from emotionjournal.emotionnotes import EmotionNote
 
+newfont = {'family': "Segoe UI"}
 matplotlib.use("Agg")
+matplotlib.rc('font', **newfont)
+
 
 # для отображения сколько дней подряд пользователь вносит заметки
 class UserStrikeView(APIView):
@@ -121,7 +124,7 @@ class MoodGraphView(APIView):
         # Построение графика
         fig, ax = plt.subplots(figsize=(10, 7))
         sns.lineplot(data=daily_ratings, x="date", y="rating", marker="o", ax=ax)
-        plt.subplots_adjust(left=0.1, right=0.95)  # Увеличиваем отступ слева
+        plt.subplots_adjust(left=0.05, right=0.95)  # Увеличиваем отступ слева
         ax.set_title("Колебания настроения")
         ax.set_xlabel("Дата")
         ax.set_ylabel("Средний рейтинг")
@@ -262,7 +265,7 @@ class MoodCategoryView(APIView):
             wedgeprops=dict(width=size, edgecolor='w'),
             autopct='%1.0f%%', # одна цифра после запятой
             labeldistance=None, # вырезание подписей
-            textprops={'fontsize': 20, 'fontweight': 'bold'}
+            textprops={'fontsize': 20, 'fontweight': 'normal'}
         )
 
         # Внешний круг
@@ -273,13 +276,13 @@ class MoodCategoryView(APIView):
             colors=emotion_colors,
             startangle=start_angle,
             wedgeprops=dict(width=size, edgecolor='w'),
-            textprops={'fontsize': 20, 'fontweight': 'bold'}
+            textprops={'fontsize': 20, 'fontweight': 'normal'}
         )
 
         # Настройки отображения
         ax.axis('equal')  # Сделать круг
         ax.set_title(f"Распределение настроений с {start_date.strftime('%d.%m.%Y')} по {end_date.strftime('%d.%m.%Y')}", fontdict={
-            'fontsize': 20,
+            'fontsize': 25, 'fontweight': 'bold',
         }, y=1.12) # заголовок графика
 
         # ax.legend(wedges1, [Emotion.EmotionGroup(code).label for code in group_labels], title="Группы",

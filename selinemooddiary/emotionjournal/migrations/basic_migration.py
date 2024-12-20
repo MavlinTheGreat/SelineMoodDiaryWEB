@@ -24,7 +24,7 @@ def add_initial_data(apps, schema_editor):
         ('Злость', 'Вы в ярости, и негатив съедает вас изнутри.',
          3, 'STATIC/EMOTION_ICONS/zlost.png', 'ANG'),
         ('Тревога', 'Негатив, страхи настоящего и будущего медленно съедают вас изнутри.',
-         2, 'media/STATIC/EMOTION_ICONS/trevoga.png', 'SAD'),
+         2, 'STATIC/EMOTION_ICONS/trevoga.png', 'SAD'),
         ('Грусть', 'Тоска, да и только.',
          1, 'STATIC/EMOTION_ICONS/grust.png', 'SAD'),
     ]
