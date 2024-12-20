@@ -1,11 +1,70 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import AuthContext from '../../context/AuthContext';
+import { jwtDecode } from "jwt-decode";
+import axios from 'axios';
 import '../../static/css/calendar.css'
 
 const DateList = ({ createNote }) => {
+    
+  const {loginUser} = useContext(AuthContext);
   
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
+  const [emotions, setEmotions] = useState([]);
+  const [notes, setNotes] = useState([]);
   const today = new Date();
+  
+  useEffect(() => {
+    
+    const token = localStorage.getItem("authTokens");
+
+    if (token) {
+      const parsedTokens = JSON.parse(token);
+      
+      const fetchEmotions = async () => {
+        try {
+          
+          const response = await axios.get('http://127.0.0.1:8000/api/journal/emotions', {
+            headers: { Authorization: "Bearer " + parsedTokens.access },
+          });
+          
+          setEmotions(response.data);
+        } catch (err) {
+          alert(err.message);
+        }
+      };
+      
+      fetchEmotions();
+    }
+  }, []);
+  
+  useEffect(() => {
+    
+    const token = localStorage.getItem("authTokens");
+
+    if (token) {
+      const parsedTokens = JSON.parse(token);
+      
+      const fetchNotes = async () => {
+        try {
+          
+          const response = await axios.get('http://127.0.0.1:8000/api/journal/notes', {
+            params: {
+              start_date: currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-1",
+              end_date: currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate().toString(), 
+            },
+            headers: { Authorization: "Bearer " + parsedTokens.access },
+          });
+          
+          setNotes(response.data);
+        } catch (err) {
+          alert(err.message);
+        }
+      };
+      
+      fetchNotes();
+    }
+  }, [currentDate]);
 
   const daysInMonth = () => {
     const year = currentDate.getFullYear();
@@ -65,6 +124,17 @@ const DateList = ({ createNote }) => {
         currentDate.getMonth() === selectedDate.getMonth() &&
         currentDate.getFullYear() === selectedDate.getFullYear();
 
+      let currentNote = {
+      };
+
+      try {
+        currentNote = notes.find((note) => note.date.split('T')[0] === String(currentDate.getFullYear()) + "-" + String(currentDate.getMonth() + 1).padStart(2, '0') + "-" + String(day).padStart(2, '0'));
+      } catch (err) {
+        currentNote = {
+          emotion: 0
+        };
+      }
+
       days.push(
         <div
           key={day}
@@ -73,7 +143,10 @@ const DateList = ({ createNote }) => {
           }`}
           onClick={() => handleDayClick(day)}
         >
+
+          {currentNote && (<img src={emotions.find((emotion) => emotion.id === currentNote.emotion).imageIcon}/>)}
           {day}
+
         </div>
       );
     }
@@ -81,15 +154,20 @@ const DateList = ({ createNote }) => {
     return days;
   };
 
+  const getMonthYear = () => {
+    let initialMonthYear = currentDate.toLocaleString("default", {
+      month: "long",
+      year: "numeric",
+    })
+    return initialMonthYear.charAt(0).toUpperCase() + initialMonthYear.slice(1)
+  }
+
   return (
     <div className="calendar">
       <div className="calendar-header">
         <button onClick={goToPreviousMonth}>&lt;</button>
         <span>
-          {currentDate.toLocaleString("default", {
-            month: "long",
-            year: "numeric",
-          })}
+          {getMonthYear()}
         </span>
         <button onClick={goToNextMonth}>&gt;</button>
       </div>
@@ -101,6 +179,22 @@ const DateList = ({ createNote }) => {
         ))}
         {renderDays()}
       </div>
+      {/*<div>
+        {Object.entries(notes.find((note) => note.date.split('T')[0] === String(currentDate.getFullYear()) + "-" + String(currentDate.getMonth() + 1).padStart(2, '0') + "-01")).map(([key, value]) => 
+        <p>{key}: {value}</p>
+        )}
+      </div>
+      <div>
+        {notes.map((item) => 
+        (<div>
+          {Object.entries(item).map(([key, value]) => (
+              <p key={key}>
+                <strong>{key}:</strong> {value}
+              </p>
+            ))}
+        </div>)
+        )}
+      </div>*/}
     </div>
   );
 };

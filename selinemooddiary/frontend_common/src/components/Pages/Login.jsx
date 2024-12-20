@@ -9,7 +9,7 @@ function Login() {
 
     const navigate = useNavigate();
 
-    if (user) {
+    if (loginUser.user) {
         navigate('/');
     }
     
@@ -36,7 +36,7 @@ function Login() {
 
         setLoading(false);
 
-        if (user) {
+        if (loginUser.user) {
             navigate('/');
         }
     };
