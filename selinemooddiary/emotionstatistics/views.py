@@ -1,24 +1,26 @@
 from datetime import timedelta, datetime, date
+from random import random
+
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import random
 import io
-import os
 import requests
 from PIL import Image
 
 from django.http import HttpResponse
-from matplotlib import image as mpimg
+from django.db import models
 import matplotlib.dates as mdates
+from matplotlib.colors import to_rgba
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from emotionjournal.emotions import Emotion, GROUP_ICONS
 from emotionjournal.emotionnotes import EmotionNote
-
-from selinemooddiary import settings
 
 matplotlib.use("Agg")
 
@@ -29,7 +31,7 @@ class UserStrikeView(APIView):
     def get(self, request):
         user = request.user  # текущий пользователь
         today = date.today()
-        print(today)
+        #print(today)
 
         # Получаем все заметки пользователя, отсортированные по дате
         notes = (
@@ -109,8 +111,6 @@ class MoodGraphView(APIView):
         daycount = pd.to_datetime(df['date'])
         if daycount.dt.date.nunique() < 3:
             return Response({"detail": "Недостаточно записей"})
-        else:
-            print(df)
 
         # Группируем по дате и рассчитываем средний рейтинг
         daily_ratings = df.groupby("date")["rating"].mean().reset_index()
@@ -172,3 +172,124 @@ class MoodGraphView(APIView):
 
         # Возвращаем график как HTTP-ответ
         return HttpResponse(buffer, content_type="image/png")
+
+# затемняет цвет на указанный процент в виде десятичной дроби
+# например, при amount=0.10 цвет color затемняется на 10%
+def darken_color(color, amount=0.10):
+    rgba = to_rgba(color)
+    darker_rgba = [(channel * (1 - amount)) if i < 3 else channel for i, channel in enumerate(rgba)]
+    return tuple(darker_rgba)
+
+
+class MoodCategoryView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(selfself, request):
+        user = request.user  # текущий пользователь
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        # Обработка дат
+        try:
+            if start_date:
+                start_date = pd.to_datetime(start_date).date()
+
+            if end_date:
+                end_date = pd.to_datetime(end_date).date()
+            else:
+                end_date = date.today()
+            if not start_date:
+                start_date = end_date - timedelta(days=30) # стандартно рассматривается последний месяц (30 дней..)
+
+        except ValueError:
+            raise ValidationError("Некорректный формат дат. Используйте формат YYYY-MM-DD.")
+
+        if start_date > end_date:
+            raise ValidationError("Дата начала не может быть позже даты окончания.")
+
+        # Фильтрация записей
+        notes = EmotionNote.objects.filter(
+            user=user,
+            date__date__range=(start_date, end_date)
+        )
+
+        # Подготовка данных
+        group_data = notes.values("emotion__group").annotate(count=models.Count('id'))
+        emotion_data = notes.values("emotion__name", "emotion__group").annotate(count=models.Count('id'))
+
+        if not group_data.exists() or not emotion_data.exists():
+            return Response({"details": "записей нет, нам конец."})
+
+        # Подготовка данных для круговой диаграммы
+        group_df = pd.DataFrame(list(group_data))
+        emotion_df = pd.DataFrame(list(emotion_data))
+        # Сортировка данных для внешнего круга
+        emotion_df_sorted = emotion_df.sort_values(by='emotion__group')
+        # Внутренний круг (группы эмоций)
+        group_labels = group_df['emotion__group'].tolist()
+        # print(group_labels)
+        group_colors = [darken_color(GROUP_ICONS.get(group, GROUP_ICONS['OTH'])[1], amount=0.15) for group in group_labels]
+        #print(group_colors)
+        group_counts = group_df['count'].tolist()
+
+        # Внешний круг (конкретные эмоции)
+        emotion_labels = emotion_df_sorted['emotion__name'].tolist()
+        # print(emotion_labels)
+        emotion_colors = [GROUP_ICONS.get(row['emotion__group'], GROUP_ICONS['OTH'])[1] for _, row in
+                          emotion_df_sorted.iterrows()]
+        emotion_counts = emotion_df_sorted['count'].tolist()
+        # Построение диаграммы
+        fig, ax = plt.subplots(figsize=(11, 10))
+        size = 0.5  # Ширина кольца
+        gap = 0.0025 # зазор
+        # случайный угол начала. по идее figsize хватает на любые углы, но так выглядит приятнее всего по опыту
+        start_angle = random.randint(0, 91)
+        fig.subplots_adjust(top=0.8)
+
+        # font = {'family': 'normal',
+        #         'weight': 'bold',
+        #         'size': 72}
+        # matplotlib.rc('font', **font)
+
+        # Внутренний круг
+        wedges1, texts1, _ = ax.pie(
+            group_counts,
+            radius=1 - size - gap,
+            labels=[Emotion.EmotionGroup(code).label for code in group_labels],
+            colors=group_colors,
+            startangle=start_angle,
+            wedgeprops=dict(width=size, edgecolor='w'),
+            autopct='%1.1f%%', # одна цифра после запятой
+            labeldistance=None, # вырезание подписей
+            textprops={'fontsize': 14, 'fontweight': 'bold'}
+        )
+
+        # Внешний круг
+        wedges2, texts2 = ax.pie(
+            emotion_counts,
+            radius=1,
+            labels=emotion_labels,
+            colors=emotion_colors,
+            startangle=start_angle,
+            wedgeprops=dict(width=size, edgecolor='w'),
+            textprops={'fontsize': 14, 'fontweight': 'bold'}
+        )
+
+        # Настройки отображения
+        ax.axis('equal')  # Сделать круг
+        ax.set_title(f"Распределение настроений с {start_date.strftime("%d.%m.%Y")} по {end_date.strftime("%d.%m.%Y")}", fontdict={
+            'fontsize': 16,
+        }, y=1.1) # заголовок графика
+
+        # ax.legend(wedges1, [Emotion.EmotionGroup(code).label for code in group_labels], title="Группы",
+        #           loc="center left", bbox_to_anchor=(0.8, 0.5, 1, 1),
+        #           fontsize=14)
+
+        # Сохранение изображения в буфер
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+
+        # Возвращаем картинку как HTTP-ответ
+        return HttpResponse(buf, content_type='image/png')

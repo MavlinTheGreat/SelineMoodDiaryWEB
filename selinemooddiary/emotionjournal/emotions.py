@@ -14,18 +14,18 @@ def unique_image_path(instance, filename):
     return os.path.join("images/emotionicons", unique_name)
 
 GROUP_ICONS = {
-        'HAP': ('STATIC/EMOTION_GROUPS/happy.webp', '#fbec5d'),
-        'CALM': ('STATIC/EMOTION_GROUPS/calm.webp', '#00ff00'),
-        'INDIF': ('STATIC/EMOTION_GROUPS/indiff.webp', '#bc8f8f'),
-        'ANG': ('STATIC/EMOTION_GROUPS/angry.webp', '#ff6347'),
-        'SAD': ('STATIC/EMOTION_GROUPS/sad.webp', '#629edd'),
+        'HAP': ('STATIC/EMOTION_GROUPS/happy.png', '#FDF29B'),
+        'CALM': ('STATIC/EMOTION_GROUPS/calm.png', '#CEE09A'),
+        'INDIF': ('STATIC/EMOTION_GROUPS/indiff.png', '#E2E2E2'),
+        'ANG': ('STATIC/EMOTION_GROUPS/angry.png', '#F29983'),
+        'SAD': ('STATIC/EMOTION_GROUPS/sad.png', '#9ED1E9'),
         'OTH': ('STATIC/EMOTION_GROUPS/other.webp', '#c8c8c8') ,
 }
 
 class Emotion(models.Model):
     class EmotionGroup(models.TextChoices):
         HAPPY = 'HAP', 'Радость'
-        CALM = 'CALM', 'Спокойствие'
+        CALM = 'CALM', 'Умиротворение'
         INDIFF = 'INDIF', 'Безразличие'
         ANGRY = 'ANG', 'Злость'
         SAD = 'SAD', 'Грусть'
