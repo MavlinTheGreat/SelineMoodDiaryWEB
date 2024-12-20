@@ -119,9 +119,9 @@ class MoodGraphView(APIView):
         daily_ratings['date_num'] = mdates.date2num(daily_ratings['date'])
 
         # Построение графика
-        fig, ax = plt.subplots(figsize=(12, 7))
+        fig, ax = plt.subplots(figsize=(10, 7))
         sns.lineplot(data=daily_ratings, x="date", y="rating", marker="o", ax=ax)
-        plt.subplots_adjust(left=0.25, right=0.95)  # Увеличиваем отступ слева
+        plt.subplots_adjust(left=0.1, right=0.95)  # Увеличиваем отступ слева
         ax.set_title("Колебания настроения")
         ax.set_xlabel("Дата")
         ax.set_ylabel("Средний рейтинг")
@@ -240,7 +240,7 @@ class MoodCategoryView(APIView):
                           emotion_df_sorted.iterrows()]
         emotion_counts = emotion_df_sorted['count'].tolist()
         # Построение диаграммы
-        fig, ax = plt.subplots(figsize=(11, 10))
+        fig, ax = plt.subplots(figsize=(10, 9))
         size = 0.5  # Ширина кольца
         gap = 0.0025 # зазор
         # случайный угол начала. по идее figsize хватает на любые углы, но так выглядит приятнее всего по опыту
@@ -279,12 +279,12 @@ class MoodCategoryView(APIView):
         # Настройки отображения
         ax.axis('equal')  # Сделать круг
         ax.set_title(f"Распределение настроений с {start_date.strftime('%d.%m.%Y')} по {end_date.strftime('%d.%m.%Y')}", fontdict={
-            'fontsize': 16,
-        }, y=1.1) # заголовок графика
+            'fontsize': 20,
+        }, y=1.12) # заголовок графика
 
         # ax.legend(wedges1, [Emotion.EmotionGroup(code).label for code in group_labels], title="Группы",
         #           loc="center left", bbox_to_anchor=(0.8, 0.5, 1, 1),
-        #           fontsize=14)
+        #           fontsize=14)-
 
         # Сохранение изображения в буфер
         buf = io.BytesIO()
