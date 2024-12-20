@@ -87,21 +87,18 @@ const componentsMap = {
 
 function Main() {
   
-  const [activeSection, setActiveSection] = useState('');
+  const [activeSection, setActiveSection] = useState('Calendar');
 
   const changeSectionKey = (newSectionKey) => {
     setActiveSection(newSectionKey);
   }
 
-  const EmotionContext = React.createContext();
-
   return (
     <div className='main-page'>
       <Menu sectionList={sectionList} changeSectionKey={changeSectionKey}/>
-      <EmotionContext.Provider value={emotionEmojiList}></EmotionContext.Provider>
-        <div className='active-section'>
-          {componentsMap[activeSection] || <div>Страница не найдена</div>}
-        </div>
+      <div className='active-section'>
+        {componentsMap[activeSection] || <div>Страница не найдена</div>}
+      </div>
     </div>
   );
 }

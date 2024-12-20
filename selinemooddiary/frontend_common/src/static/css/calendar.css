@@ -1,29 +1,30 @@
 .calendar-section {
-  background-color: white;
-  border: 1px solid #d9d9d9;
-  border-radius: 1rem;
   margin: 0 auto;
 }
 
 .calendar {
-  width: 350px;
+  width: 35rem;
   font-family: Arial, sans-serif;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  border-radius: 1rem;
 }
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 1rem;
   background-color: #f4f4f4;
   font-weight: bold;
   border-radius: 1rem 1rem 0 0;
+  font-size: 1.25rem;
 }
 
 .calendar-header button {
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 1.25rem;
   cursor: pointer;
 }
 
@@ -37,21 +38,32 @@
 .calendar-day-name {
   font-weight: bold;
   text-align: center;
+  font-size: 1.25rem;
 }
 
 .calendar-day {
-  width: 40px;
-  height: 40px;
+  width: 4rem;
+  height: 4rem;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   border-radius: 50%;
   transition: background-color 0.3s;
+  position: relative;
+  font-size: 1.25rem;
+}
+.calendar-day img {
+  position: absolute;
+  height: 3rem;
 }
 
 .calendar-day:hover {
   background-color: #e0e0e0;
+}
+
+.calendar-day:hover img {
+  display: none;
 }
 
 .calendar-day.today {
@@ -62,4 +74,138 @@
 .calendar-day.selected {
   background-color: #6f42c1;
   color: #fff;
+}
+
+.emotion-choice {
+  width: 100%; /* Диаметр круга */
+  height: 100%; 
+  border-radius: 50%; 
+  background-color: #f0f0f0; /* Цвет фона для круга */
+  position: relative; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.center-item {
+  position: absolute;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 1; /* Текст всегда будет над картинками */
+}
+
+.image-container {
+  position: absolute; 
+  width: 4rem; 
+  height: 4rem; 
+}
+
+.circle-item {
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  border-radius: 50%; /* Если нужно, чтобы картинки тоже были круглыми */
+}
+
+.emotion-tooltip {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.note-form-container {
+  position: relative;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  width: 30rem;
+}
+
+.note-form-header {
+  position: relative;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.note-form-header > :first-child {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 1.25rem;
+}
+
+.note-form-header > :last-child {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.note-form-header button {
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+}
+
+.emotion-partition {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.emotion-partition img {
+  width: 8rem;
+  height: 8rem;
+  margin-bottom: 0;
+}
+
+.emotion-partition {
+  font-size: 1.25rem;
+}
+
+.emotion-partition > :first-child {
+  margin-top: 4rem;
+} 
+
+.note-form textarea {
+  display: block;
+  width: calc(100% - 2rem);
+  height: 15rem;
+  margin: 1rem;
+  margin-bottom: 1rem;
+  padding: 0;
+  border: none;
+  font-size: 1.25rem;
+}
+
+.note-form button {
+  display: block;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  width: calc(50% - 1rem);
+  background-color: #ff6c6c;
+  margin: auto;
+  font-size: 1.25rem;
+}
+
+.note-form button[type="submit"] {
+  background-color: #14ae5c;
+  width: calc(50% - 1rem);
+}
+
+.form-buttons {
+  display: flex;
+  margin-top: auto;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
