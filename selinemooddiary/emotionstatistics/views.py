@@ -1,17 +1,24 @@
-from datetime import timedelta, date, datetime
+from datetime import timedelta, datetime, date
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import io
+import os
+import requests
+from PIL import Image
 
 from django.http import HttpResponse
-from django.utils.timezone import now
+from matplotlib import image as mpimg
+import matplotlib.dates as mdates
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from emotionjournal.emotionnotes import EmotionNote
+
+from selinemooddiary import settings
 
 matplotlib.use("Agg")
 
@@ -22,6 +29,7 @@ class UserStrikeView(APIView):
     def get(self, request):
         user = request.user  # текущий пользователь
         today = date.today()
+        print(today)
 
         # Получаем все заметки пользователя, отсортированные по дате
         notes = (
@@ -29,7 +37,6 @@ class UserStrikeView(APIView):
             .order_by('date')
             .values_list('date', flat=True)
         )
-
         if not notes:
             return Response({'strike': 0})  # Если записей нет, возвращаем 0
 
@@ -70,7 +77,7 @@ class MoodGraphView(APIView):
             if end_date:
                 end_date = pd.to_datetime(end_date).date()
             else:
-                end_date = now().date()
+                end_date = date.today()
             if not start_date:
                 start_date = end_date - timedelta(days=7)
 
@@ -87,7 +94,7 @@ class MoodGraphView(APIView):
         ).select_related('emotion')
 
         if not notes.exists():
-            return Response({"detail": "Нет записей за указанный период."})
+            return Response({"detail": "Нет записей"})
 
         # Преобразуем данные в DataFrame
         data = [
@@ -99,20 +106,66 @@ class MoodGraphView(APIView):
         ]
         df = pd.DataFrame(data).dropna()  # Убираем записи без рейтинга
 
+        daycount = pd.to_datetime(df['date'])
+        if daycount.dt.date.nunique() < 3:
+            return Response({"detail": "Недостаточно записей"})
+        else:
+            print(df)
+
         # Группируем по дате и рассчитываем средний рейтинг
         daily_ratings = df.groupby("date")["rating"].mean().reset_index()
 
+        # Преобразуем даты в числовой формат
+        daily_ratings['date_num'] = mdates.date2num(daily_ratings['date'])
+
         # Построение графика
-        fig, ax = plt.subplots(figsize=(10, 5), num=f"mood_graph_{request.user.email}{datetime.now()}")
+        fig, ax = plt.subplots(figsize=(12, 7))
         sns.lineplot(data=daily_ratings, x="date", y="rating", marker="o", ax=ax)
+        plt.subplots_adjust(left=0.25, right=0.95)  # Увеличиваем отступ слева
         ax.set_title("Колебания настроения")
         ax.set_xlabel("Дата")
         ax.set_ylabel("Средний рейтинг")
         plt.xticks(rotation=45)
 
+        # Расширяем границы графика
+        ax.set_xlim(daily_ratings['date_num'].iloc[0] - 0.5, daily_ratings['date_num'].iloc[-1] + 0.5)
+
+        # Настройка оси Y с изображениями
+        ax.set_yticks(range(1, 11))  # Размещение меток оси Y от 1 до 10
+        ax.set_yticklabels([''] * 10)  # Убираем текстовые метки
+        ax.yaxis.set_tick_params(pad=30)
+
+        # Загружаем изображение
+        pictures = (
+            'http://127.0.0.1:8000/media/static/emotion_icons/face_sadness.png',
+            '',
+            'http://127.0.0.1:8000/media/static/emotion_icons/orange_face.png',
+            '',
+            'http://127.0.0.1:8000/media/static/emotion_icons/yellow_face.png',
+            '',
+            '',
+            'http://127.0.0.1:8000/media/static/emotion_icons/blue_face.png',
+            '',
+            'http://127.0.0.1:8000/media/static/emotion_icons/green_face.png'
+        )
+        # Размещаем изображения слева от оси Y
+        for rating in (0, 2, 4, 7, 9):
+            icon_url = pictures[rating]
+            response = requests.get(icon_url)
+            img = Image.open(io.BytesIO(response.content))
+            if img:
+                img_array = OffsetImage(img, zoom=0.7, alpha=0.6)
+            ab = AnnotationBbox(
+                img_array,  # Объект изображения
+                (daily_ratings['date_num'].iloc[0] - 0.5, rating + 1),  # Смещение координат X (слева от оси)
+                frameon=False,  # Без рамки
+                boxcoords="data",
+                box_alignment=(1.5, 0.5)  # Выравнивание по правому краю изображения
+            )
+            ax.add_artist(ab)
+
         # Сохранение графика в буфер
         buffer = io.BytesIO()
-        plt.tight_layout()
         fig.savefig(buffer, format="png")
         buffer.seek(0)
         plt.close('all')
