@@ -140,16 +140,16 @@ class MoodGraphView(APIView):
 
         # Загружаем изображение
         pictures = (
-            'http://127.0.0.1:8000/media/static/emotion_icons/face_sadness.png',
+            'http://127.0.0.1:8000/media/static/emotion_icons/grust.png',
             '',
-            'http://127.0.0.1:8000/media/static/emotion_icons/orange_face.png',
+            'http://127.0.0.1:8000/media/static/emotion_icons/trevoga.png',
             '',
-            'http://127.0.0.1:8000/media/static/emotion_icons/yellow_face.png',
+            'http://127.0.0.1:8000/media/static/emotion_icons/skuka.png',
             '',
             '',
-            'http://127.0.0.1:8000/media/static/emotion_icons/blue_face.png',
+            'http://127.0.0.1:8000/media/static/emotion_icons/na_podeme.png',
             '',
-            'http://127.0.0.1:8000/media/static/emotion_icons/green_face.png'
+            'http://127.0.0.1:8000/media/static/emotion_icons/schastie.png'
         )
         # Размещаем изображения слева от оси Y
         for rating in (0, 2, 4, 7, 9):
