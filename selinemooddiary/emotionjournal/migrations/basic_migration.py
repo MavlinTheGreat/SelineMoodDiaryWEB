@@ -1,4 +1,3 @@
-# migrations/0002_add_initial_data.py
 from django.db import migrations
 
 def add_initial_data(apps, schema_editor):
