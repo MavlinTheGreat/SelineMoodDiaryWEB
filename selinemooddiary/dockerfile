@@ -1,7 +1,5 @@
-# Step 1: Base image for Python (Django)
 FROM python:3.12.5-slim as backend
 
-# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 

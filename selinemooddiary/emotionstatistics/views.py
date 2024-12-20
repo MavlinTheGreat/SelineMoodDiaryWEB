@@ -122,13 +122,13 @@ class MoodGraphView(APIView):
         daily_ratings['date_num'] = mdates.date2num(daily_ratings['date'])
 
         # Построение графика
-        fig, ax = plt.subplots(figsize=(10, 7))
+        fig, ax = plt.subplots(figsize=(10, 7.1))
         sns.lineplot(data=daily_ratings, x="date", y="rating", marker="o", ax=ax)
-        plt.subplots_adjust(left=0.05, right=0.95)  # Увеличиваем отступ слева
-        ax.set_title("Колебания настроения")
-        ax.set_xlabel("Дата")
-        ax.set_ylabel("Средний рейтинг")
-        plt.xticks(rotation=45)
+        plt.subplots_adjust(left=0.2, right=0.95, bottom=0.2)  # Увеличиваем отступ слева
+        ax.set_title("Колебания настроения", fontsize=16, fontweight='bold')
+        ax.set_xlabel("Дата", fontsize=16)
+        ax.set_ylabel("Средний рейтинг", fontsize=16)
+        plt.xticks(rotation=60, fontsize=16)
 
         # Расширяем границы графика
         ax.set_xlim(daily_ratings['date_num'].iloc[0] - 0.5, daily_ratings['date_num'].iloc[-1] + 0.5)
@@ -136,7 +136,7 @@ class MoodGraphView(APIView):
         # Настройка оси Y с изображениями
         ax.set_yticks(range(1, 11))  # Размещение меток оси Y от 1 до 10
         ax.set_yticklabels([''] * 10)  # Убираем текстовые метки
-        ax.yaxis.set_tick_params(pad=30)
+        ax.yaxis.set_tick_params(pad=40) # паддинг у подписи оси
 
         # Загружаем изображение
         pictures = (
@@ -157,13 +157,13 @@ class MoodGraphView(APIView):
             response = requests.get(icon_url)
             img = Image.open(io.BytesIO(response.content))
             if img:
-                img_array = OffsetImage(img, zoom=0.7, alpha=0.6)
+                img_array = OffsetImage(img, zoom=0.2, alpha=0.8)
             ab = AnnotationBbox(
                 img_array,  # Объект изображения
                 (daily_ratings['date_num'].iloc[0] - 0.5, rating + 1),  # Смещение координат X (слева от оси)
                 frameon=False,  # Без рамки
                 boxcoords="data",
-                box_alignment=(1.5, 0.5)  # Выравнивание по правому краю изображения
+                box_alignment=(1.4, 0.5)  # Выравнивание по правому краю изображения
             )
             ax.add_artist(ab)
 
