@@ -12,7 +12,7 @@ MEDIA_URL ='/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY = config("SECRET_KEY", default=os.urandom(24).hex())
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
