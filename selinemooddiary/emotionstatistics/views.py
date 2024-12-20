@@ -260,9 +260,9 @@ class MoodCategoryView(APIView):
             colors=group_colors,
             startangle=start_angle,
             wedgeprops=dict(width=size, edgecolor='w'),
-            autopct='%1.1f%%', # одна цифра после запятой
+            autopct='%1.0f%%', # одна цифра после запятой
             labeldistance=None, # вырезание подписей
-            textprops={'fontsize': 14, 'fontweight': 'bold'}
+            textprops={'fontsize': 20, 'fontweight': 'bold'}
         )
 
         # Внешний круг
@@ -273,7 +273,7 @@ class MoodCategoryView(APIView):
             colors=emotion_colors,
             startangle=start_angle,
             wedgeprops=dict(width=size, edgecolor='w'),
-            textprops={'fontsize': 14, 'fontweight': 'bold'}
+            textprops={'fontsize': 20, 'fontweight': 'bold'}
         )
 
         # Настройки отображения
