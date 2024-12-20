@@ -278,7 +278,7 @@ class MoodCategoryView(APIView):
 
         # Настройки отображения
         ax.axis('equal')  # Сделать круг
-        ax.set_title(f"Распределение настроений с {start_date.strftime("%d.%m.%Y")} по {end_date.strftime("%d.%m.%Y")}", fontdict={
+        ax.set_title(f"Распределение настроений с {start_date.strftime('%d.%m.%Y')} по {end_date.strftime('%d.%m.%Y')}", fontdict={
             'fontsize': 16,
         }, y=1.1) # заголовок графика
 
